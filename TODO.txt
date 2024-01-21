@@ -1,0 +1,9 @@
+# pointer
+
+- points to a memory location in memory (it's just an integer)
+- memory has a value and an address
+
+- &var: memory address of var
+- int*: pointer of a type int
+- void*: pointer of a type void
+- *ptr: dereference a pointer called ptr (accessing data inside)
