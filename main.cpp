@@ -13,74 +13,143 @@ enum {
 	SNAKE_RIGHT
 };
 
+struct apple {
+	int x;
+	int y;
+};
+struct apple Apple;
+
 struct snake {
 	int x;
 	int y;
-	int dir;
 	struct snake * next;
 };
 typedef struct snake Snake;
 
+
 Snake* head = NULL;
 Snake* tail = NULL;
+int DIR = SNAKE_UP;
+
 
 void init_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
 	new_node -> x = ((rand() % 10) + 1) * 60 + 100;
 	new_node -> y = ((rand() % 10) + 1) * 60 + 100;
-	new_node -> dir = SNAKE_UP;
+	DIR = SNAKE_UP;
 	new_node -> next = NULL;
 	head = new_node;
 	tail = new_node;
 	return;
 }
 
-void get_coordinate(int x, int y, int dir, int arr[]){
-	if(dir == SNAKE_UP){
-		arr[0] = x;
-		arr[1] = y - CELL_SIZE;
-	} else if(dir == SNAKE_DOWN){
-		arr[0] = x;
-		arr[1] = y + CELL_SIZE;
-	} else if(dir == SNAKE_LEFT){
-		arr[0] = x - CELL_SIZE;
-		arr[1] = y;
-	} else {
-		arr[0] = x + CELL_SIZE;
-		arr[1] = y;
-	}
+
+void gen_apple(){
+	Apple.x = ((rand() % 10) + 1) * 60 + 100;
+	Apple.y = ((rand() % 10) + 1) * 60 + 100;
 	return;
 }
 
 
 void move_snake_up(){
-	// prepend new_node
-	Snake* new_node = (Snake*)malloc(sizeof(Snake));
-	new_node -> x = head -> x;
-	new_node -> y = head -> y - CELL_SIZE;
-	new_node -> dir = head -> dir;
-	new_node -> next = head;
-	head = new_node;
+	if(DIR != SNAKE_DOWN & (head -> y) - CELL_SIZE >= MARGIN){
+		// prepend new_node
+		Snake* new_node = (Snake*)malloc(sizeof(Snake));
+		new_node -> x = head -> x;
+		new_node -> y = head -> y - CELL_SIZE;
+        DIR = SNAKE_UP;
+		new_node -> next = head;
+		head = new_node;
 
-	// delete last node
-	Snake* track = head;
-	while((track -> next) -> next != NULL){
-		track = track -> next;
+		// delete last node
+		Snake* track = head;
+		while((track -> next) -> next != NULL){
+			track = track -> next;
+		}
+		track->next = NULL;
+		tail = track;
 	}
-	track->next = NULL;
-	tail = track;
 	return;
 }
 
 void move_snake_down(){
-	return;
+	if(DIR != SNAKE_UP & (head -> y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+		// prepend new_node
+		Snake* new_node = (Snake*)malloc(sizeof(Snake));
+		new_node -> x = head -> x;
+		new_node -> y = head -> y + CELL_SIZE;
+		DIR = SNAKE_DOWN;
+		new_node -> next = head;
+		head = new_node;
+
+		// delete last node
+		Snake* track = head;
+		while((track -> next) -> next != NULL){
+			track = track -> next;
+		}
+		track->next = NULL;
+		tail = track;
+		return;
+	}
 }
 
 void move_snake_left(){
-	return;
+	if(DIR != SNAKE_RIGHT & (head -> x) - CELL_SIZE >= MARGIN){
+		// prepend new_node
+		Snake* new_node = (Snake*)malloc(sizeof(Snake));
+		new_node -> x = head -> x - CELL_SIZE;
+		new_node -> y = head -> y;
+		DIR = SNAKE_LEFT;
+		new_node -> next = head;
+		head = new_node;
+
+		// delete last node
+		Snake* track = head;
+		while((track -> next) -> next != NULL){
+			track = track -> next;
+		}
+		track->next = NULL;
+		tail = track;
+		return;
+	}
 }
 
 void move_snake_right(){
+	if(DIR != SNAKE_LEFT & (head -> x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+		// prepend new_node
+		Snake* new_node = (Snake*)malloc(sizeof(Snake));
+		new_node -> x = head -> x + CELL_SIZE;
+		new_node -> y = head -> y;
+		DIR = SNAKE_RIGHT;
+		new_node -> next = head;
+		head = new_node;
+
+		// delete last node
+		Snake* track = head;
+		while((track -> next) -> next != NULL){
+			track = track -> next;
+		}
+		track->next = NULL;
+		tail = track;
+	}
+	return;
+}
+
+
+void get_coordinate(int x, int y, int arr[]){
+	if(DIR == SNAKE_UP){
+		arr[0] = x;
+		arr[1] = y + CELL_SIZE;
+	} else if(DIR == SNAKE_DOWN){
+		arr[0] = x;
+		arr[1] = y - CELL_SIZE;
+	} else if(DIR == SNAKE_LEFT){
+		arr[0] = x + CELL_SIZE;
+		arr[1] = y;
+	} else {
+		arr[0] = x - CELL_SIZE;
+		arr[1] = y;
+	}
 	return;
 }
 
@@ -89,17 +158,16 @@ void grow_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
 
 	int arr[2]; // saves new_x, new_y
-	get_coordinate(tail -> x, tail -> y, tail -> dir, arr);
+	get_coordinate(tail -> x, tail -> y, arr);
 	new_node -> x = arr[0];
 	new_node -> y = arr[1];
-	new_node -> dir = tail -> dir;
-	new_node -> next = NULL;
-
+	
 	tail -> next = new_node;
 	tail = new_node;
 
 	return;
 }
+
 
 void render_grid(){
 	int x = MARGIN;
@@ -116,14 +184,14 @@ void render_grid(){
 	return;
 }
 
-void render_apple(int row_idx, int col_idx){
-	int x = MARGIN + ((col_idx - 1) * CELL_SIZE);
-	int y = MARGIN + ((row_idx - 1) * CELL_SIZE);
-	int center_x = x + (CELL_SIZE / 2);
-	int center_y = y + (CELL_SIZE / 2);
-	// DrawCircle(int centerX, int centerY, float radius, Color color); 
+
+void render_apple(){
+	int center_x = Apple.x + (CELL_SIZE / 2);
+	int center_y = Apple.y + (CELL_SIZE / 2);
 	DrawCircle(center_x, center_y, CELL_SIZE / 2 / 2, RED);
+	return;
 }
+
 
 void render_snake(){
 	Snake* track = head;
@@ -134,14 +202,17 @@ void render_snake(){
 	return;
 }
 
+
 int main() {
+	srand(1111);
 	InitWindow(800, 800, "snake");
 	SetTargetFPS(60);
+
+	gen_apple();
 
 	init_snake();
 	grow_snake();
 	grow_snake();
-
 
 	while (!WindowShouldClose()) {
 
@@ -153,17 +224,13 @@ int main() {
 		BeginDrawing();
 
 			ClearBackground(RAYWHITE);
-			// DrawRectangle(int posX, int posY, int width, int height, Color color);
+
 			render_grid();
-			render_apple(2, 3);
-
-
+			render_apple();
 			render_snake();
 
 		EndDrawing();
-
 	}
-
 	CloseWindow();
 	return 0;
 }
