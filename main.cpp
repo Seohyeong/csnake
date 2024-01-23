@@ -34,8 +34,8 @@ int DIR = SNAKE_UP;
 
 void init_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
-	new_node -> x = ((rand() % 10) + 1) * 60 + 100;
-	new_node -> y = ((rand() % 10) + 1) * 60 + 100;
+	new_node -> x = ((rand() % 10) + 1) * 60 + 40;
+	new_node -> y = ((rand() % 10) + 1) * 60 + 40;
 	DIR = SNAKE_UP;
 	new_node -> next = NULL;
 	head = new_node;
@@ -45,8 +45,8 @@ void init_snake(){
 
 
 void gen_apple(){
-	Apple.x = ((rand() % 10) + 1) * 60 + 100;
-	Apple.y = ((rand() % 10) + 1) * 60 + 100;
+	Apple.x = ((rand() % 10) + 1) * 60 + 40; // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
+	Apple.y = ((rand() % 10) + 1) * 60 + 40;
 	return;
 }
 
@@ -195,6 +195,8 @@ void render_apple(){
 
 void render_snake(){
 	Snake* track = head;
+	DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, DARKGREEN);
+	track = track->next;
 	while(track != NULL){
 		DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, GREEN);
 		track = track->next;
@@ -211,8 +213,8 @@ int main() {
 	gen_apple();
 
 	init_snake();
-	grow_snake();
-	grow_snake();
+	// grow_snake();
+	// grow_snake();
 
 	while (!WindowShouldClose()) {
 
@@ -220,6 +222,11 @@ int main() {
         if(IsKeyPressed(KEY_DOWN)){move_snake_down();}
         if(IsKeyPressed(KEY_LEFT)){move_snake_left();}
         if(IsKeyPressed(KEY_RIGHT)){move_snake_right();}
+
+		if(head->x == Apple.x & head->y == Apple.y){
+			grow_snake();
+			gen_apple();
+		}
 
 		BeginDrawing();
 
