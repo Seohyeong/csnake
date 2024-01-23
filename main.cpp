@@ -4,7 +4,8 @@
 
 #define WINDOW_SIZE 800
 #define MARGIN 100
-#define CELL_SIZE 60
+#define CELL_SIZE 30
+#define CELL_DIM (WINDOW_SIZE-2*MARGIN)/CELL_SIZE //how many cells in a row (always square)
 
 enum {
 	SNAKE_UP,
@@ -34,8 +35,8 @@ int DIR = SNAKE_UP;
 
 void init_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
-	new_node -> x = ((rand() % 10) + 1) * 60 + 40;
-	new_node -> y = ((rand() % 10) + 1) * 60 + 40;
+	new_node -> x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+	new_node -> y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	DIR = SNAKE_UP;
 	new_node -> next = NULL;
 	head = new_node;
@@ -45,8 +46,8 @@ void init_snake(){
 
 
 void gen_apple(){
-	Apple.x = ((rand() % 10) + 1) * 60 + 40; // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
-	Apple.y = ((rand() % 10) + 1) * 60 + 40;
+	Apple.x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE); // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
+	Apple.y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	return;
 }
 
@@ -137,16 +138,16 @@ void move_snake_right(){
 
 
 void get_coordinate(int x, int y, int arr[]){
-	if(DIR == SNAKE_UP){
+	if(DIR == SNAKE_UP & y + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x;
 		arr[1] = y + CELL_SIZE;
-	} else if(DIR == SNAKE_DOWN){
+	} else if(DIR == SNAKE_DOWN & y - CELL_SIZE >= MARGIN){
 		arr[0] = x;
 		arr[1] = y - CELL_SIZE;
-	} else if(DIR == SNAKE_LEFT){
+	} else if(DIR == SNAKE_LEFT & x + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x + CELL_SIZE;
 		arr[1] = y;
-	} else {
+	} else if(DIR == SNAKE_RIGHT & x - CELL_SIZE >= MARGIN){
 		arr[0] = x - CELL_SIZE;
 		arr[1] = y;
 	}
