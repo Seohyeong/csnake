@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cassert>
 #include <raylib.h>
 
 #define WINDOW_SIZE 800
@@ -144,18 +145,27 @@ void move_snake_right(Snake& snake){
 
 
 void get_coordinate(const Snake& snake, int x, int y, int arr[]){
-	if(snake.dir == Direction::Up && y + CELL_SIZE < WINDOW_SIZE - MARGIN){
-		arr[0] = x;
-		arr[1] = y + CELL_SIZE;
-	} else if(snake.dir == Direction::Down && y - CELL_SIZE >= MARGIN){
-		arr[0] = x;
-		arr[1] = y - CELL_SIZE;
-	} else if(snake.dir == Direction::Left && x + CELL_SIZE < WINDOW_SIZE - MARGIN){
-		arr[0] = x + CELL_SIZE;
-		arr[1] = y;
-	} else if(snake.dir == Direction::Right && x - CELL_SIZE >= MARGIN){
-		arr[0] = x - CELL_SIZE;
-		arr[1] = y;
+	if(snake.dir == Direction::Up){
+		if (y + CELL_SIZE < WINDOW_SIZE - MARGIN) {
+			arr[0] = x;
+			arr[1] = y + CELL_SIZE;
+		}
+	} else if(snake.dir == Direction::Down){
+		if (y - CELL_SIZE >= MARGIN) {
+			arr[0] = x;
+			arr[1] = y - CELL_SIZE;
+		}
+	} else if(snake.dir == Direction::Left){
+		if (x + CELL_SIZE < WINDOW_SIZE - MARGIN) {
+			arr[0] = x + CELL_SIZE;
+			arr[1] = y;
+		}
+	} else {
+		assert(snake.dir == Direction::Right);
+		if (x - CELL_SIZE >= MARGIN) {
+			arr[0] = x - CELL_SIZE;
+			arr[1] = y;
+		}
 	}
 }
 
