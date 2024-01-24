@@ -53,7 +53,7 @@ void gen_apple(){
 
 
 void move_snake_up(){
-	if(snake.dir != Direction::Down && (snake.head->y) - CELL_SIZE >= MARGIN){
+	if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x;
@@ -64,7 +64,7 @@ void move_snake_up(){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while((track->next)->next != NULL){
+		while(track->next->next != NULL){
 			track = track->next;
 		}
 		track->next = NULL;
@@ -73,7 +73,7 @@ void move_snake_up(){
 }
 
 void move_snake_down(){
-	if(snake.dir != Direction::Up && (snake.head->y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(snake.dir != Direction::Up && snake.head->y + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x;
@@ -84,7 +84,7 @@ void move_snake_down(){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while((track->next)->next != NULL){
+		while(track->next->next != NULL){
 			track = track->next;
 		}
 		track->next = NULL;
@@ -93,7 +93,7 @@ void move_snake_down(){
 }
 
 void move_snake_left(){
-	if(snake.dir != Direction::Right && (snake.head->x) - CELL_SIZE >= MARGIN){
+	if(snake.dir != Direction::Right && snake.head->x - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x - CELL_SIZE;
@@ -104,7 +104,7 @@ void move_snake_left(){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while((track->next)->next != NULL){
+		while(track->next->next != NULL){
 			track = track->next;
 		}
 		track->next = NULL;
@@ -113,7 +113,7 @@ void move_snake_left(){
 }
 
 void move_snake_right(){
-	if(snake.dir != Direction::Left && (snake.head->x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(snake.dir != Direction::Left && snake.head->x + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x + CELL_SIZE;
@@ -124,7 +124,7 @@ void move_snake_right(){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while((track->next)->next != NULL){
+		while(track->next->next != NULL){
 			track = track->next;
 		}
 		track->next = NULL;
