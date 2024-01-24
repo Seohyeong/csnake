@@ -43,14 +43,12 @@ void init_snake(){
 	new_node->next = NULL;
 	snake.head = new_node;
 	snake.tail = new_node;
-	return;
 }
 
 
 void gen_apple(){
 	apple.x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE); // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
 	apple.y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
-	return;
 }
 
 
@@ -72,7 +70,6 @@ void move_snake_up(){
 		track->next = NULL;
 		snake.tail = track;
 	}
-	return;
 }
 
 void move_snake_down(){
@@ -92,7 +89,6 @@ void move_snake_down(){
 		}
 		track->next = NULL;
 		snake.tail = track;
-		return;
 	}
 }
 
@@ -113,7 +109,6 @@ void move_snake_left(){
 		}
 		track->next = NULL;
 		snake.tail = track;
-		return;
 	}
 }
 
@@ -135,7 +130,6 @@ void move_snake_right(){
 		track->next = NULL;
 		snake.tail = track;
 	}
-	return;
 }
 
 
@@ -153,7 +147,6 @@ void get_coordinate(int x, int y, int arr[]){
 		arr[0] = x - CELL_SIZE;
 		arr[1] = y;
 	}
-	return;
 }
 
 
@@ -167,8 +160,6 @@ void grow_snake(){
 	
 	snake.tail->next = new_node;
 	snake.tail = new_node;
-
-	return;
 }
 
 
@@ -184,7 +175,6 @@ void render_grid(){
 		y = MARGIN;
 		x += CELL_SIZE;
 	}
-	return;
 }
 
 
@@ -192,7 +182,6 @@ void render_apple(){
 	int center_x = apple.x + (CELL_SIZE / 2);
 	int center_y = apple.y + (CELL_SIZE / 2);
 	DrawCircle(center_x, center_y, CELL_SIZE / 2 / 2, RED);
-	return;
 }
 
 
@@ -204,7 +193,6 @@ void render_snake(){
 		DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, GREEN);
 		track = track->next;
 	}
-	return;
 }
 
 
