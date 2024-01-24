@@ -27,9 +27,9 @@ struct SnakeNode {
 };
 
 struct Snake {
-	SnakeNode* head = nullptr;
-	SnakeNode* tail = nullptr;
-	Direction dir = Direction::Up;
+	SnakeNode* head;
+	SnakeNode* tail;
+	Direction dir;
 };
 
 struct State {
@@ -202,7 +202,7 @@ void render_snake(const Snake& snake){
 int main() {
 	srand(1111);
 
-	State state;
+	State state{};
 
 	InitWindow(800, 800, "snake");
 	SetTargetFPS(60);
