@@ -5,7 +5,7 @@
 #define WINDOW_SIZE 800
 #define MARGIN 100
 #define CELL_SIZE 30
-#define CELL_DIM (WINDOW_SIZE-2*MARGIN)/CELL_SIZE //how many cells in a row (always square)
+#define CELL_DIM (WINDOW_SIZE - 2 * MARGIN) / CELL_SIZE //how many cells in a row (always square)
 
 enum struct Direction {
 	Up,
@@ -33,10 +33,10 @@ Apple apple;
 
 void init_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
-	new_node -> x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
-	new_node -> y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+	new_node->x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+	new_node->y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	dir = Direction::Up;
-	new_node -> next = NULL;
+	new_node->next = NULL;
 	head = new_node;
 	tail = new_node;
 	return;
@@ -51,19 +51,19 @@ void gen_apple(){
 
 
 void move_snake_up(){
-	if(dir != Direction::Down & (head -> y) - CELL_SIZE >= MARGIN){
+	if(dir != Direction::Down & (head->y) - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
-		new_node -> x = head -> x;
-		new_node -> y = head -> y - CELL_SIZE;
+		new_node->x = head->x;
+		new_node->y = head->y - CELL_SIZE;
         dir = Direction::Up;
-		new_node -> next = head;
+		new_node->next = head;
 		head = new_node;
 
 		// delete last node
 		Snake* track = head;
-		while((track -> next) -> next != NULL){
-			track = track -> next;
+		while((track->next)->next != NULL){
+			track = track->next;
 		}
 		track->next = NULL;
 		tail = track;
@@ -72,19 +72,19 @@ void move_snake_up(){
 }
 
 void move_snake_down(){
-	if(dir != Direction::Up & (head -> y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(dir != Direction::Up & (head->y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
-		new_node -> x = head -> x;
-		new_node -> y = head -> y + CELL_SIZE;
+		new_node->x = head->x;
+		new_node->y = head->y + CELL_SIZE;
 		dir = Direction::Down;
-		new_node -> next = head;
+		new_node->next = head;
 		head = new_node;
 
 		// delete last node
 		Snake* track = head;
-		while((track -> next) -> next != NULL){
-			track = track -> next;
+		while((track->next)->next != NULL){
+			track = track->next;
 		}
 		track->next = NULL;
 		tail = track;
@@ -93,19 +93,19 @@ void move_snake_down(){
 }
 
 void move_snake_left(){
-	if(dir != Direction::Right & (head -> x) - CELL_SIZE >= MARGIN){
+	if(dir != Direction::Right & (head->x) - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
-		new_node -> x = head -> x - CELL_SIZE;
-		new_node -> y = head -> y;
+		new_node->x = head->x - CELL_SIZE;
+		new_node->y = head->y;
 		dir = Direction::Left;
-		new_node -> next = head;
+		new_node->next = head;
 		head = new_node;
 
 		// delete last node
 		Snake* track = head;
-		while((track -> next) -> next != NULL){
-			track = track -> next;
+		while((track->next)->next != NULL){
+			track = track->next;
 		}
 		track->next = NULL;
 		tail = track;
@@ -114,19 +114,19 @@ void move_snake_left(){
 }
 
 void move_snake_right(){
-	if(dir != Direction::Left & (head -> x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(dir != Direction::Left & (head->x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
-		new_node -> x = head -> x + CELL_SIZE;
-		new_node -> y = head -> y;
+		new_node->x = head->x + CELL_SIZE;
+		new_node->y = head->y;
 		dir = Direction::Right;
-		new_node -> next = head;
+		new_node->next = head;
 		head = new_node;
 
 		// delete last node
 		Snake* track = head;
-		while((track -> next) -> next != NULL){
-			track = track -> next;
+		while((track->next)->next != NULL){
+			track = track->next;
 		}
 		track->next = NULL;
 		tail = track;
@@ -157,11 +157,11 @@ void grow_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
 
 	int arr[2]; // saves new_x, new_y
-	get_coordinate(tail -> x, tail -> y, arr);
-	new_node -> x = arr[0];
-	new_node -> y = arr[1];
+	get_coordinate(tail->x, tail->y, arr);
+	new_node->x = arr[0];
+	new_node->y = arr[1];
 	
-	tail -> next = new_node;
+	tail->next = new_node;
 	tail = new_node;
 
 	return;
