@@ -5,7 +5,8 @@
 #define WINDOW_SIZE 800
 #define MARGIN 100
 #define CELL_SIZE 30
-#define CELL_DIM (WINDOW_SIZE - 2 * MARGIN) / CELL_SIZE //how many cells in a row (always square)
+// how many cells in a row (always square)
+#define CELL_DIM ((WINDOW_SIZE - 2 * MARGIN) / CELL_SIZE)
 
 enum struct Direction {
 	Up,
