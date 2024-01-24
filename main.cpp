@@ -32,10 +32,13 @@ struct Snake {
 	Direction dir = Direction::Up;
 };
 
-Snake snake;
-Apple apple;
+struct State {
+	Snake snake;
+	Apple apple;
+};
 
-void init_snake(){
+
+void init_snake(Snake& snake){
 	SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 	new_node->x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	new_node->y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
@@ -46,13 +49,13 @@ void init_snake(){
 }
 
 
-void gen_apple(){
+void gen_apple(Apple& apple){
 	apple.x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE); // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
 	apple.y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 }
 
 
-void move_snake_up(){
+void move_snake_up(Snake& snake){
 	if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
@@ -72,7 +75,7 @@ void move_snake_up(){
 	}
 }
 
-void move_snake_down(){
+void move_snake_down(Snake& snake){
 	if(snake.dir != Direction::Up && snake.head->y + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
@@ -92,7 +95,7 @@ void move_snake_down(){
 	}
 }
 
-void move_snake_left(){
+void move_snake_left(Snake& snake){
 	if(snake.dir != Direction::Right && snake.head->x - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
@@ -112,7 +115,7 @@ void move_snake_left(){
 	}
 }
 
-void move_snake_right(){
+void move_snake_right(Snake& snake){
 	if(snake.dir != Direction::Left && snake.head->x + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
@@ -133,7 +136,7 @@ void move_snake_right(){
 }
 
 
-void get_coordinate(int x, int y, int arr[]){
+void get_coordinate(const Snake& snake, int x, int y, int arr[]){
 	if(snake.dir == Direction::Up && y + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x;
 		arr[1] = y + CELL_SIZE;
@@ -150,11 +153,11 @@ void get_coordinate(int x, int y, int arr[]){
 }
 
 
-void grow_snake(){
+void grow_snake(Snake& snake){
 	SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 
 	int arr[2]; // saves new_x, new_y
-	get_coordinate(snake.tail->x, snake.tail->y, arr);
+	get_coordinate(snake, snake.tail->x, snake.tail->y, arr);
 	new_node->x = arr[0];
 	new_node->y = arr[1];
 	
@@ -178,14 +181,14 @@ void render_grid(){
 }
 
 
-void render_apple(){
+void render_apple(const Apple& apple){
 	int center_x = apple.x + (CELL_SIZE / 2);
 	int center_y = apple.y + (CELL_SIZE / 2);
 	DrawCircle(center_x, center_y, CELL_SIZE / 2 / 2, RED);
 }
 
 
-void render_snake(){
+void render_snake(const Snake& snake){
 	SnakeNode* track = snake.head;
 	DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, DARKGREEN);
 	track = track->next;
@@ -198,25 +201,28 @@ void render_snake(){
 
 int main() {
 	srand(1111);
+
+	State state;
+
 	InitWindow(800, 800, "snake");
 	SetTargetFPS(60);
 
-	gen_apple();
+	gen_apple(state.apple);
 
-	init_snake();
+	init_snake(state.snake);
 	// grow_snake();
 	// grow_snake();
 
 	while (!WindowShouldClose()) {
 
-        if(IsKeyPressed(KEY_UP)){move_snake_up();}
-        if(IsKeyPressed(KEY_DOWN)){move_snake_down();}
-        if(IsKeyPressed(KEY_LEFT)){move_snake_left();}
-        if(IsKeyPressed(KEY_RIGHT)){move_snake_right();}
+        if(IsKeyPressed(KEY_UP)){move_snake_up(state.snake);}
+        if(IsKeyPressed(KEY_DOWN)){move_snake_down(state.snake);}
+        if(IsKeyPressed(KEY_LEFT)){move_snake_left(state.snake);}
+        if(IsKeyPressed(KEY_RIGHT)){move_snake_right(state.snake);}
 
-		if(snake.head->x == apple.x && snake.head->y == apple.y){
-			grow_snake();
-			gen_apple();
+		if(state.snake.head->x == state.apple.x && state.snake.head->y == state.apple.y){
+			grow_snake(state.snake);
+			gen_apple(state.apple);
 		}
 
 		BeginDrawing();
@@ -224,8 +230,8 @@ int main() {
 			ClearBackground(RAYWHITE);
 
 			render_grid();
-			render_apple();
-			render_snake();
+			render_apple(state.apple);
+			render_snake(state.snake);
 
 		EndDrawing();
 	}
