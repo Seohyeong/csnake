@@ -27,8 +27,8 @@ struct SnakeNode {
 };
 
 struct Snake {
-	SnakeNode* head = NULL;
-	SnakeNode* tail = NULL;
+	SnakeNode* head = nullptr;
+	SnakeNode* tail = nullptr;
 	Direction dir = Direction::Up;
 };
 
@@ -43,7 +43,7 @@ void init_snake(Snake& snake){
 	new_node->x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	new_node->y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	snake.dir = Direction::Up;
-	new_node->next = NULL;
+	new_node->next = nullptr;
 	snake.head = new_node;
 	snake.tail = new_node;
 }
@@ -67,10 +67,10 @@ void move_snake_up(Snake& snake){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while(track->next->next != NULL){
+		while(track->next->next != nullptr){
 			track = track->next;
 		}
-		track->next = NULL;
+		track->next = nullptr;
 		snake.tail = track;
 	}
 }
@@ -87,10 +87,10 @@ void move_snake_down(Snake& snake){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while(track->next->next != NULL){
+		while(track->next->next != nullptr){
 			track = track->next;
 		}
-		track->next = NULL;
+		track->next = nullptr;
 		snake.tail = track;
 	}
 }
@@ -107,10 +107,10 @@ void move_snake_left(Snake& snake){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while(track->next->next != NULL){
+		while(track->next->next != nullptr){
 			track = track->next;
 		}
-		track->next = NULL;
+		track->next = nullptr;
 		snake.tail = track;
 	}
 }
@@ -127,10 +127,10 @@ void move_snake_right(Snake& snake){
 
 		// delete last node
 		SnakeNode* track = snake.head;
-		while(track->next->next != NULL){
+		while(track->next->next != nullptr){
 			track = track->next;
 		}
-		track->next = NULL;
+		track->next = nullptr;
 		snake.tail = track;
 	}
 }
@@ -192,7 +192,7 @@ void render_snake(const Snake& snake){
 	SnakeNode* track = snake.head;
 	DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, DARKGREEN);
 	track = track->next;
-	while(track != NULL){
+	while(track != nullptr){
 		DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, GREEN);
 		track = track->next;
 	}
