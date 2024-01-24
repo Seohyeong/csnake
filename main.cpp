@@ -15,6 +15,8 @@ enum struct Direction {
 	Right
 };
 
+// NOTE(TB): it would be simpler if model coordinates are in cell space instead of screen space
+// then have a function that does the conversion, and use it in the drawing functions
 struct Apple {
 	int x;
 	int y;
@@ -40,6 +42,10 @@ struct State {
 
 void init_snake(Snake& snake){
 	SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
+	// NOTE(TB): I would consider putting this expression to generate a random coordinate into a function,
+	// since its used here and in gen_apple.
+	// but once you change the model coordinates to be in cell space instead of screen space,
+	// this will be much simpler and less important to factor into a funciton.
 	new_node->x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	new_node->y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	snake.dir = Direction::Up;
@@ -65,6 +71,7 @@ void move_snake_up(Snake& snake){
 		new_node->next = snake.head;
 		snake.head = new_node;
 
+		// NOTE(TB): some of the linked list functions like this could be nicely factored into functions
 		// delete last node
 		SnakeNode* track = snake.head;
 		while(track->next->next != nullptr){
@@ -215,6 +222,7 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
+		// NOTE(TB): consider here if multiple keys have been pressed
         if(IsKeyPressed(KEY_UP)){move_snake_up(state.snake);}
         if(IsKeyPressed(KEY_DOWN)){move_snake_down(state.snake);}
         if(IsKeyPressed(KEY_LEFT)){move_snake_left(state.snake);}
