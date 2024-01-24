@@ -227,11 +227,13 @@ int main() {
 
 		BeginDrawing();
 
+		{
 			ClearBackground(RAYWHITE);
 
 			render_grid();
 			render_apple(state.apple);
 			render_snake(state.snake);
+		}
 
 		EndDrawing();
 	}
