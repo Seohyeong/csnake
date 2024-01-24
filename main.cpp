@@ -14,24 +14,22 @@ enum struct Direction {
 	Right
 };
 
-struct apple {
+struct Apple {
 	int x;
 	int y;
 };
-struct apple Apple;
 
-struct snake {
+struct Snake {
 	int x;
 	int y;
-	struct snake * next;
+	Snake* next;
 };
-typedef struct snake Snake;
 
 
 Snake* head = NULL;
 Snake* tail = NULL;
 Direction dir = Direction::Up;
-
+Apple apple;
 
 void init_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
@@ -46,8 +44,8 @@ void init_snake(){
 
 
 void gen_apple(){
-	Apple.x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE); // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
-	Apple.y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+	apple.x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE); // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
+	apple.y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	return;
 }
 
@@ -187,8 +185,8 @@ void render_grid(){
 
 
 void render_apple(){
-	int center_x = Apple.x + (CELL_SIZE / 2);
-	int center_y = Apple.y + (CELL_SIZE / 2);
+	int center_x = apple.x + (CELL_SIZE / 2);
+	int center_y = apple.y + (CELL_SIZE / 2);
 	DrawCircle(center_x, center_y, CELL_SIZE / 2 / 2, RED);
 	return;
 }
@@ -224,7 +222,7 @@ int main() {
         if(IsKeyPressed(KEY_LEFT)){move_snake_left();}
         if(IsKeyPressed(KEY_RIGHT)){move_snake_right();}
 
-		if(head->x == Apple.x & head->y == Apple.y){
+		if(head->x == apple.x & head->y == apple.y){
 			grow_snake();
 			gen_apple();
 		}
