@@ -53,7 +53,7 @@ void gen_apple(){
 
 
 void move_snake_up(){
-	if(snake.dir != Direction::Down & (snake.head->y) - CELL_SIZE >= MARGIN){
+	if(snake.dir != Direction::Down && (snake.head->y) - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x;
@@ -73,7 +73,7 @@ void move_snake_up(){
 }
 
 void move_snake_down(){
-	if(snake.dir != Direction::Up & (snake.head->y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(snake.dir != Direction::Up && (snake.head->y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x;
@@ -93,7 +93,7 @@ void move_snake_down(){
 }
 
 void move_snake_left(){
-	if(snake.dir != Direction::Right & (snake.head->x) - CELL_SIZE >= MARGIN){
+	if(snake.dir != Direction::Right && (snake.head->x) - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x - CELL_SIZE;
@@ -113,7 +113,7 @@ void move_snake_left(){
 }
 
 void move_snake_right(){
-	if(snake.dir != Direction::Left & (snake.head->x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(snake.dir != Direction::Left && (snake.head->x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 		new_node->x = snake.head->x + CELL_SIZE;
@@ -134,16 +134,16 @@ void move_snake_right(){
 
 
 void get_coordinate(int x, int y, int arr[]){
-	if(snake.dir == Direction::Up & y + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(snake.dir == Direction::Up && y + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x;
 		arr[1] = y + CELL_SIZE;
-	} else if(snake.dir == Direction::Down & y - CELL_SIZE >= MARGIN){
+	} else if(snake.dir == Direction::Down && y - CELL_SIZE >= MARGIN){
 		arr[0] = x;
 		arr[1] = y - CELL_SIZE;
-	} else if(snake.dir == Direction::Left & x + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	} else if(snake.dir == Direction::Left && x + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x + CELL_SIZE;
 		arr[1] = y;
-	} else if(snake.dir == Direction::Right & x - CELL_SIZE >= MARGIN){
+	} else if(snake.dir == Direction::Right && x - CELL_SIZE >= MARGIN){
 		arr[0] = x - CELL_SIZE;
 		arr[1] = y;
 	}
@@ -214,7 +214,7 @@ int main() {
         if(IsKeyPressed(KEY_LEFT)){move_snake_left();}
         if(IsKeyPressed(KEY_RIGHT)){move_snake_right();}
 
-		if(snake.head->x == apple.x & snake.head->y == apple.y){
+		if(snake.head->x == apple.x && snake.head->y == apple.y){
 			grow_snake();
 			gen_apple();
 		}
