@@ -7,11 +7,11 @@
 #define CELL_SIZE 30
 #define CELL_DIM (WINDOW_SIZE-2*MARGIN)/CELL_SIZE //how many cells in a row (always square)
 
-enum {
-	SNAKE_UP,
-	SNAKE_DOWN,
-	SNAKE_LEFT,
-	SNAKE_RIGHT
+enum struct Direction {
+	Up,
+	Down,
+	Left,
+	Right
 };
 
 struct apple {
@@ -30,14 +30,14 @@ typedef struct snake Snake;
 
 Snake* head = NULL;
 Snake* tail = NULL;
-int DIR = SNAKE_UP;
+Direction dir = Direction::Up;
 
 
 void init_snake(){
 	Snake* new_node = (Snake*)malloc(sizeof(Snake));
 	new_node -> x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
 	new_node -> y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
-	DIR = SNAKE_UP;
+	dir = Direction::Up;
 	new_node -> next = NULL;
 	head = new_node;
 	tail = new_node;
@@ -53,12 +53,12 @@ void gen_apple(){
 
 
 void move_snake_up(){
-	if(DIR != SNAKE_DOWN & (head -> y) - CELL_SIZE >= MARGIN){
+	if(dir != Direction::Down & (head -> y) - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
 		new_node -> x = head -> x;
 		new_node -> y = head -> y - CELL_SIZE;
-        DIR = SNAKE_UP;
+        dir = Direction::Up;
 		new_node -> next = head;
 		head = new_node;
 
@@ -74,12 +74,12 @@ void move_snake_up(){
 }
 
 void move_snake_down(){
-	if(DIR != SNAKE_UP & (head -> y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(dir != Direction::Up & (head -> y) + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
 		new_node -> x = head -> x;
 		new_node -> y = head -> y + CELL_SIZE;
-		DIR = SNAKE_DOWN;
+		dir = Direction::Down;
 		new_node -> next = head;
 		head = new_node;
 
@@ -95,12 +95,12 @@ void move_snake_down(){
 }
 
 void move_snake_left(){
-	if(DIR != SNAKE_RIGHT & (head -> x) - CELL_SIZE >= MARGIN){
+	if(dir != Direction::Right & (head -> x) - CELL_SIZE >= MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
 		new_node -> x = head -> x - CELL_SIZE;
 		new_node -> y = head -> y;
-		DIR = SNAKE_LEFT;
+		dir = Direction::Left;
 		new_node -> next = head;
 		head = new_node;
 
@@ -116,12 +116,12 @@ void move_snake_left(){
 }
 
 void move_snake_right(){
-	if(DIR != SNAKE_LEFT & (head -> x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(dir != Direction::Left & (head -> x) + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		// prepend new_node
 		Snake* new_node = (Snake*)malloc(sizeof(Snake));
 		new_node -> x = head -> x + CELL_SIZE;
 		new_node -> y = head -> y;
-		DIR = SNAKE_RIGHT;
+		dir = Direction::Right;
 		new_node -> next = head;
 		head = new_node;
 
@@ -138,16 +138,16 @@ void move_snake_right(){
 
 
 void get_coordinate(int x, int y, int arr[]){
-	if(DIR == SNAKE_UP & y + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	if(dir == Direction::Up & y + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x;
 		arr[1] = y + CELL_SIZE;
-	} else if(DIR == SNAKE_DOWN & y - CELL_SIZE >= MARGIN){
+	} else if(dir == Direction::Down & y - CELL_SIZE >= MARGIN){
 		arr[0] = x;
 		arr[1] = y - CELL_SIZE;
-	} else if(DIR == SNAKE_LEFT & x + CELL_SIZE < WINDOW_SIZE - MARGIN){
+	} else if(dir == Direction::Left & x + CELL_SIZE < WINDOW_SIZE - MARGIN){
 		arr[0] = x + CELL_SIZE;
 		arr[1] = y;
-	} else if(DIR == SNAKE_RIGHT & x - CELL_SIZE >= MARGIN){
+	} else if(dir == Direction::Right & x - CELL_SIZE >= MARGIN){
 		arr[0] = x - CELL_SIZE;
 		arr[1] = y;
 	}
