@@ -4,6 +4,20 @@
 - memory has a value and an address
 
 - &var: memory address of var
+- var&: taking it by reference
 - int*: pointer of a type int
 - void*: pointer of a type void
 - *ptr: dereference a pointer called ptr (accessing data inside)
+
+
+# to create Xcode build (run everytime CMakeList.txt changes)
+cmake -GXcode -Bbuild/zero2nn
+
+# build
+cmake --build build/zero2nn
+
+# run
+./build/zero2nn/Debug/zero2nn
+
+# or build and run at the same time
+cmake --build build/zero2nn && ./build/zero2nn/Debug/zero2nn

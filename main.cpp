@@ -9,6 +9,12 @@
 // how many cells in a row (always square)
 #define CELL_DIM ((WINDOW_SIZE - 2 * MARGIN) / CELL_SIZE)
 
+#define SH_WHITE {150,150,150,255}
+#define SH_BLACK {31,31,31,255}
+#define SH_DARK_GREEN {64,148,131,255}
+#define SH_GREEN {77,201,176,255}
+#define SH_RED {248,82,73,255}
+
 enum struct Direction {
 	Up,
 	Down,
@@ -47,17 +53,12 @@ int get_random_value(){
 }
 
 
-
 // INITIALIZATION
 void init_snake(Snake& snake){
 	SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
-	// NOTE(TB): I would consider putting this expression to generate a random coordinate into a function,
-	// since its used here and in gen_apple.
-	// but once you change the model coordinates to be in cell space instead of screen space,
-	// this will be much simpler and less important to factor into a funciton.
 	new_node->x = get_random_value();
 	new_node->y = get_random_value();
-	snake.dir = Direction::Up;
+	snake.dir = Direction::Up; // TODO: randomly init to a class from enum but how?
 	new_node->next = nullptr;
 	snake.head = new_node;
 	snake.tail = new_node;
@@ -81,63 +82,56 @@ void delete_last_node(Snake& snake){
 }
 
 
-void move_snake_up(Snake& snake){
-	if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
-		// prepend new_node
-		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
-		new_node->x = snake.head->x;
-		new_node->y = snake.head->y - CELL_SIZE;
-        snake.dir = Direction::Up;
-		new_node->next = snake.head;
-		snake.head = new_node;
-
-		// delete last node
-		delete_last_node(snake);
-	}
-}
-
-void move_snake_down(Snake& snake){
-	if(snake.dir != Direction::Up && snake.head->y + CELL_SIZE < WINDOW_SIZE - MARGIN){
-		// prepend new_node
-		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
-		new_node->x = snake.head->x;
-		new_node->y = snake.head->y + CELL_SIZE;
-		snake.dir = Direction::Down;
-		new_node->next = snake.head;
-		snake.head = new_node;
-
-		// delete last node
-		delete_last_node(snake);
-	}
-}
-
-void move_snake_left(Snake& snake){
-	if(snake.dir != Direction::Right && snake.head->x - CELL_SIZE >= MARGIN){
-		// prepend new_node
-		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
-		new_node->x = snake.head->x - CELL_SIZE;
-		new_node->y = snake.head->y;
-		snake.dir = Direction::Left;
-		new_node->next = snake.head;
-		snake.head = new_node;
-
-		// delete last node
-		delete_last_node(snake);
-	}
-}
-
-void move_snake_right(Snake& snake){
-	if(snake.dir != Direction::Left && snake.head->x + CELL_SIZE < WINDOW_SIZE - MARGIN){
-		// prepend new_node
-		SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
-		new_node->x = snake.head->x + CELL_SIZE;
-		new_node->y = snake.head->y;
-		snake.dir = Direction::Right;
-		new_node->next = snake.head;
-		snake.head = new_node;
-
-		// delete last node
-		delete_last_node(snake);
+// TODO: if len == 1 then should be able to move any dir
+void move_snake(Snake& snake, enum Direction input_dir){
+	if(input_dir==Direction::Up){
+		if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
+			// prepend new_node
+			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
+			new_node->x = snake.head->x;
+			new_node->y = snake.head->y - CELL_SIZE;
+			snake.dir = input_dir;
+			new_node->next = snake.head;
+			snake.head = new_node;
+			// delete last node
+			delete_last_node(snake);
+		}
+	} else if(input_dir==Direction::Down){
+		if(snake.dir != Direction::Up && snake.head->y + CELL_SIZE < WINDOW_SIZE - MARGIN){
+			// prepend new_node
+			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
+			new_node->x = snake.head->x;
+			new_node->y = snake.head->y + CELL_SIZE;
+			snake.dir = input_dir;
+			new_node->next = snake.head;
+			snake.head = new_node;
+			// delete last node
+			delete_last_node(snake);
+		}
+	} else if(input_dir==Direction::Left){
+		if(snake.dir != Direction::Right && snake.head->x - CELL_SIZE >= MARGIN){
+			// prepend new_node
+			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
+			new_node->x = snake.head->x - CELL_SIZE;
+			new_node->y = snake.head->y;
+			snake.dir = input_dir;
+			new_node->next = snake.head;
+			snake.head = new_node;
+			// delete last node
+			delete_last_node(snake);
+		} 
+	} else {
+		if(snake.dir != Direction::Left && snake.head->x + CELL_SIZE < WINDOW_SIZE - MARGIN){
+			// prepend new_node
+			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
+			new_node->x = snake.head->x + CELL_SIZE;
+			new_node->y = snake.head->y;
+			snake.dir = input_dir;
+			new_node->next = snake.head;
+			snake.head = new_node;
+			// delete last node
+			delete_last_node(snake);
+		}
 	}
 }
 
@@ -182,14 +176,22 @@ void grow_snake(Snake& snake){
 }
 
 
+void get_apple(Snake& snake, Apple& apple){
+	SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
+	new_node->x = apple.x;
+	new_node->y = apple.y;
+	new_node->next = snake.head;
+	snake.head = new_node;
+}
+
+
 // RENDERING
 void render_grid(){
 	int x = MARGIN;
 	int y = MARGIN;
 	while (x < WINDOW_SIZE - MARGIN) {
 		while (y < WINDOW_SIZE - MARGIN) {
-			// DrawRectangleLines(int posX, int posY, int width, int height, Color color);
-			DrawRectangleLines(x, y, CELL_SIZE, CELL_SIZE, LIGHTGRAY);
+			DrawRectangleLines(x, y, CELL_SIZE, CELL_SIZE, SH_WHITE);
 			y += CELL_SIZE;
 		}
 		y = MARGIN;
@@ -201,16 +203,16 @@ void render_grid(){
 void render_apple(const Apple& apple){
 	int center_x = apple.x + (CELL_SIZE / 2);
 	int center_y = apple.y + (CELL_SIZE / 2);
-	DrawCircle(center_x, center_y, CELL_SIZE / 2 / 2, RED);
+	DrawCircle(center_x, center_y, CELL_SIZE / 2 / 2, SH_RED);
 }
 
 
 void render_snake(const Snake& snake){
 	SnakeNode* track = snake.head;
-	DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, DARKGREEN);
+	DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, SH_DARK_GREEN);
 	track = track->next;
 	while(track != nullptr){
-		DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, GREEN);
+		DrawRectangle(track->x, track->y, CELL_SIZE, CELL_SIZE, SH_GREEN);
 		track = track->next;
 	}
 }
@@ -222,7 +224,7 @@ int main() {
 	State state{};
 
 	InitWindow(800, 800, "snake");
-	SetTargetFPS(60);
+	SetTargetFPS(10);
 
 	gen_apple(state.apple);
 
@@ -232,21 +234,23 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
+		move_snake(state.snake, state.snake.dir);
+
 		// NOTE(TB): consider here if multiple keys have been pressed
-        if(IsKeyPressed(KEY_UP)){move_snake_up(state.snake);}
-        if(IsKeyPressed(KEY_DOWN)){move_snake_down(state.snake);}
-        if(IsKeyPressed(KEY_LEFT)){move_snake_left(state.snake);}
-        if(IsKeyPressed(KEY_RIGHT)){move_snake_right(state.snake);}
+        if(IsKeyPressed(KEY_UP)){move_snake(state.snake, Direction::Up);}
+        if(IsKeyPressed(KEY_DOWN)){move_snake(state.snake, Direction::Down);}
+        if(IsKeyPressed(KEY_LEFT)){move_snake(state.snake, Direction::Left);}
+        if(IsKeyPressed(KEY_RIGHT)){move_snake(state.snake, Direction::Right);}
 
 		if(state.snake.head->x == state.apple.x && state.snake.head->y == state.apple.y){
-			grow_snake(state.snake);
+			get_apple(state.snake, state.apple);
 			gen_apple(state.apple);
 		}
 
 		BeginDrawing();
 
 		{
-			ClearBackground(RAYWHITE);
+			ClearBackground(SH_BLACK);
 
 			render_grid();
 			render_apple(state.apple);
