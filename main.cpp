@@ -62,6 +62,16 @@ void gen_apple(Apple& apple){
 }
 
 
+void delete_last_node(Snake& snake){
+	SnakeNode* track = snake.head;
+		while(track->next->next != nullptr){
+			track = track->next;
+		}
+		track->next = nullptr;
+		snake.tail = track;
+}
+
+
 void move_snake_up(Snake& snake){
 	if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
 		// prepend new_node
@@ -72,14 +82,8 @@ void move_snake_up(Snake& snake){
 		new_node->next = snake.head;
 		snake.head = new_node;
 
-		// NOTE(TB): some of the linked list functions like this could be nicely factored into functions
 		// delete last node
-		SnakeNode* track = snake.head;
-		while(track->next->next != nullptr){
-			track = track->next;
-		}
-		track->next = nullptr;
-		snake.tail = track;
+		delete_last_node(snake);
 	}
 }
 
@@ -94,12 +98,7 @@ void move_snake_down(Snake& snake){
 		snake.head = new_node;
 
 		// delete last node
-		SnakeNode* track = snake.head;
-		while(track->next->next != nullptr){
-			track = track->next;
-		}
-		track->next = nullptr;
-		snake.tail = track;
+		delete_last_node(snake);
 	}
 }
 
@@ -114,12 +113,7 @@ void move_snake_left(Snake& snake){
 		snake.head = new_node;
 
 		// delete last node
-		SnakeNode* track = snake.head;
-		while(track->next->next != nullptr){
-			track = track->next;
-		}
-		track->next = nullptr;
-		snake.tail = track;
+		delete_last_node(snake);
 	}
 }
 
@@ -134,12 +128,7 @@ void move_snake_right(Snake& snake){
 		snake.head = new_node;
 
 		// delete last node
-		SnakeNode* track = snake.head;
-		while(track->next->next != nullptr){
-			track = track->next;
-		}
-		track->next = nullptr;
-		snake.tail = track;
+		delete_last_node(snake);
 	}
 }
 
