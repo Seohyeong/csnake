@@ -41,14 +41,22 @@ struct State {
 };
 
 
+int get_random_value(){
+	// 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
+	return ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+}
+
+
+
+// INITIALIZATION
 void init_snake(Snake& snake){
 	SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 	// NOTE(TB): I would consider putting this expression to generate a random coordinate into a function,
 	// since its used here and in gen_apple.
 	// but once you change the model coordinates to be in cell space instead of screen space,
 	// this will be much simpler and less important to factor into a funciton.
-	new_node->x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
-	new_node->y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+	new_node->x = get_random_value();
+	new_node->y = get_random_value();
 	snake.dir = Direction::Up;
 	new_node->next = nullptr;
 	snake.head = new_node;
@@ -57,11 +65,12 @@ void init_snake(Snake& snake){
 
 
 void gen_apple(Apple& apple){
-	apple.x = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE); // 1,2,3,4,5,6,7,8,9,10 -> 60, 120, 180, 240, 300, 360, 420, 480, 540, 600
-	apple.y = ((rand() % CELL_DIM) + 1) * CELL_SIZE + (MARGIN - CELL_SIZE);
+	apple.x = get_random_value();
+	apple.y = get_random_value();
 }
 
 
+// SNAKE MOVES
 void delete_last_node(Snake& snake){
 	SnakeNode* track = snake.head;
 		while(track->next->next != nullptr){
@@ -133,6 +142,7 @@ void move_snake_right(Snake& snake){
 }
 
 
+// SNAKE GROW
 void get_coordinate(const Snake& snake, int x, int y, int arr[]){
 	if(snake.dir == Direction::Up){
 		if (y + CELL_SIZE < WINDOW_SIZE - MARGIN) {
@@ -172,6 +182,7 @@ void grow_snake(Snake& snake){
 }
 
 
+// RENDERING
 void render_grid(){
 	int x = MARGIN;
 	int y = MARGIN;
