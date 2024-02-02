@@ -268,10 +268,15 @@ int main() {
 			move_snake(state.snake, state.snake.dir);
 
 			// NOTE(TB): consider here if multiple keys have been pressed
-			if(IsKeyPressed(KEY_UP)){move_snake(state.snake, Direction::Up);}
-			if(IsKeyPressed(KEY_DOWN)){move_snake(state.snake, Direction::Down);}
-			if(IsKeyPressed(KEY_LEFT)){move_snake(state.snake, Direction::Left);}
-			if(IsKeyPressed(KEY_RIGHT)){move_snake(state.snake, Direction::Right);}
+			if(IsKeyPressed(KEY_UP)){
+				move_snake(state.snake, Direction::Up);
+			} else if(IsKeyPressed(KEY_DOWN)){
+				move_snake(state.snake, Direction::Down);
+			} else if(IsKeyPressed(KEY_LEFT)){
+				move_snake(state.snake, Direction::Left);
+			} else if(IsKeyPressed(KEY_RIGHT)){
+				move_snake(state.snake, Direction::Right);
+			}
 
 			if(state.snake.head->x == state.apple.x && state.snake.head->y == state.apple.y){
 				get_apple(state.snake, state.apple);
