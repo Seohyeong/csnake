@@ -85,7 +85,8 @@ void delete_last_node(Snake& snake){
 // TODO: if len == 1 then should be able to move any dir
 void move_snake(Snake& snake, enum Direction input_dir){
 	if(input_dir==Direction::Up){
-		if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
+		// if(snake.dir != Direction::Down && snake.head->y - CELL_SIZE >= MARGIN){
+		if(snake.dir != Direction::Down){
 			// prepend new_node
 			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 			new_node->x = snake.head->x;
@@ -97,7 +98,8 @@ void move_snake(Snake& snake, enum Direction input_dir){
 			delete_last_node(snake);
 		}
 	} else if(input_dir==Direction::Down){
-		if(snake.dir != Direction::Up && snake.head->y + CELL_SIZE < WINDOW_SIZE - MARGIN){
+		// if(snake.dir != Direction::Up && snake.head->y + CELL_SIZE < WINDOW_SIZE - MARGIN){
+		if(snake.dir != Direction::Up){
 			// prepend new_node
 			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 			new_node->x = snake.head->x;
@@ -109,7 +111,8 @@ void move_snake(Snake& snake, enum Direction input_dir){
 			delete_last_node(snake);
 		}
 	} else if(input_dir==Direction::Left){
-		if(snake.dir != Direction::Right && snake.head->x - CELL_SIZE >= MARGIN){
+		// if(snake.dir != Direction::Right && snake.head->x - CELL_SIZE >= MARGIN){
+		if(snake.dir != Direction::Right){
 			// prepend new_node
 			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 			new_node->x = snake.head->x - CELL_SIZE;
@@ -121,7 +124,8 @@ void move_snake(Snake& snake, enum Direction input_dir){
 			delete_last_node(snake);
 		} 
 	} else {
-		if(snake.dir != Direction::Left && snake.head->x + CELL_SIZE < WINDOW_SIZE - MARGIN){
+		// if(snake.dir != Direction::Left && snake.head->x + CELL_SIZE < WINDOW_SIZE - MARGIN){
+		if(snake.dir != Direction::Left){
 			// prepend new_node
 			SnakeNode* new_node = (SnakeNode*)malloc(sizeof(SnakeNode));
 			new_node->x = snake.head->x + CELL_SIZE;
@@ -218,10 +222,28 @@ void render_snake(const Snake& snake){
 }
 
 
+int detect_crash(Snake& snake){
+	// check if the snake is running into its body
+	SnakeNode* track = snake.head->next;
+	while(track->next != nullptr){
+		if(snake.head->x == track->x && snake.head->y == track->y){
+			return 1;
+		}
+	}
+	// check if the snake is outside the grid
+	if((snake.head->x < MARGIN | snake.head->x > WINDOW_SIZE-MARGIN)| (snake.head->y < MARGIN | snake.head->y > WINDOW_SIZE-MARGIN)){
+		return 1;
+	}
+	return 0;
+}
+
+
 int main() {
 	srand(1111);
 
 	State state{};
+	int score = 0;
+	bool pause = false;
 
 	InitWindow(800, 800, "snake");
 	SetTargetFPS(10);
@@ -234,17 +256,24 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
-		move_snake(state.snake, state.snake.dir);
+		if(detect_crash(state.snake)){
+			pause = true;
+		}
 
-		// NOTE(TB): consider here if multiple keys have been pressed
-        if(IsKeyPressed(KEY_UP)){move_snake(state.snake, Direction::Up);}
-        if(IsKeyPressed(KEY_DOWN)){move_snake(state.snake, Direction::Down);}
-        if(IsKeyPressed(KEY_LEFT)){move_snake(state.snake, Direction::Left);}
-        if(IsKeyPressed(KEY_RIGHT)){move_snake(state.snake, Direction::Right);}
+		if(!pause){
+			move_snake(state.snake, state.snake.dir);
 
-		if(state.snake.head->x == state.apple.x && state.snake.head->y == state.apple.y){
-			get_apple(state.snake, state.apple);
-			gen_apple(state.apple);
+			// NOTE(TB): consider here if multiple keys have been pressed
+			if(IsKeyPressed(KEY_UP)){move_snake(state.snake, Direction::Up);}
+			if(IsKeyPressed(KEY_DOWN)){move_snake(state.snake, Direction::Down);}
+			if(IsKeyPressed(KEY_LEFT)){move_snake(state.snake, Direction::Left);}
+			if(IsKeyPressed(KEY_RIGHT)){move_snake(state.snake, Direction::Right);}
+
+			if(state.snake.head->x == state.apple.x && state.snake.head->y == state.apple.y){
+				get_apple(state.snake, state.apple);
+				gen_apple(state.apple);
+				score ++;
+			}
 		}
 
 		BeginDrawing();
@@ -252,9 +281,15 @@ int main() {
 		{
 			ClearBackground(SH_BLACK);
 
+			DrawText(TextFormat("SCORE: %i", score), 325, 35, 40, RAYWHITE);
+
 			render_grid();
 			render_apple(state.apple);
 			render_snake(state.snake);
+			
+			if(pause){
+				DrawText("PAUSED", 325, 325, 40, GREEN);
+			}
 		}
 
 		EndDrawing();
