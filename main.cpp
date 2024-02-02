@@ -226,12 +226,19 @@ void render_snake(const Snake& snake){
 bool detect_crash(Snake& snake){
 	// check if the snake is running into its body
 	SnakeNode* track = snake.head->next;
+	// nested if loops prevent the program from crasing
+	// get_apple() assign the location of the apple as a new head of the snake
+	// however, at the exact moment when the snake eats an apple, 
+	// head of the snake overlaps with its body
 	if(track != nullptr){
-		while(track->next != nullptr){
-			if(snake.head->x == track->x && snake.head->y == track->y){
-				return true;
+		track = track->next;
+		if(track != nullptr){
+			while(track->next != nullptr){
+				if(snake.head->x == track->x && snake.head->y == track->y){
+					return true;
+				}
+				track = track->next;
 			}
-			track = track->next;
 		}
 	}
 	// check if the snake is outside the grid
@@ -290,14 +297,14 @@ int main() {
 		{
 			ClearBackground(SH_BLACK);
 
-			DrawText(TextFormat("SCORE: %i", score), 325, 35, 40, RAYWHITE);
+			DrawText(TextFormat("SCORE: %i", score), 310, 35, 40, RAYWHITE);
 
 			render_grid();
 			render_apple(state.apple);
 			render_snake(state.snake);
 			
 			if(pause){
-				DrawText("PAUSED", 290, 350, 60, GREEN);
+				DrawText("PAUSED", 275, 350, 60, GREEN);
 			}
 		}
 
