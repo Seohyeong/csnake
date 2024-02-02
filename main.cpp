@@ -226,14 +226,16 @@ void render_snake(const Snake& snake){
 bool detect_crash(Snake& snake){
 	// check if the snake is running into its body
 	SnakeNode* track = snake.head->next;
-	while(track->next != nullptr){
-		if(snake.head->x == track->x && snake.head->y == track->y){
-			return true;
+	if(track != nullptr){
+		while(track->next != nullptr){
+			if(snake.head->x == track->x && snake.head->y == track->y){
+				return true;
+			}
+			track = track->next;
 		}
-		track = track->next;
 	}
 	// check if the snake is outside the grid
-	if((snake.head->x < MARGIN | snake.head->x > WINDOW_SIZE-MARGIN)| (snake.head->y < MARGIN | snake.head->y > WINDOW_SIZE-MARGIN)){
+	if((snake.head->x < MARGIN || snake.head->x > WINDOW_SIZE-MARGIN-CELL_SIZE)|| (snake.head->y < MARGIN || snake.head->y > WINDOW_SIZE-MARGIN-CELL_SIZE)){
 		return true;
 	}
 	return false;
@@ -290,7 +292,7 @@ int main() {
 			render_snake(state.snake);
 			
 			if(pause){
-				DrawText("PAUSED", 325, 325, 40, GREEN);
+				DrawText("PAUSED", 290, 350, 60, GREEN);
 			}
 		}
 
