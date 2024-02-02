@@ -78,6 +78,7 @@ void delete_last_node(Snake& snake){
 		while(track->next->next != nullptr){
 			track = track->next;
 		}
+		free(track->next);
 		track->next = nullptr;
 		snake.tail = track;
 }
@@ -267,9 +268,9 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
-		if(detect_crash(state.snake)){
-			pause = true;
-		}
+		// if(detect_crash(state.snake)){
+		// 	pause = true;
+		// }
 
 		if(!pause){
 			move_snake(state.snake, state.snake.dir);
