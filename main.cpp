@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <cassert>
 #include <raylib.h>
 
@@ -222,19 +223,20 @@ void render_snake(const Snake& snake){
 }
 
 
-int detect_crash(Snake& snake){
+bool detect_crash(Snake& snake){
 	// check if the snake is running into its body
 	SnakeNode* track = snake.head->next;
 	while(track->next != nullptr){
 		if(snake.head->x == track->x && snake.head->y == track->y){
-			return 1;
+			return true;
 		}
+		track = track->next;
 	}
 	// check if the snake is outside the grid
 	if((snake.head->x < MARGIN | snake.head->x > WINDOW_SIZE-MARGIN)| (snake.head->y < MARGIN | snake.head->y > WINDOW_SIZE-MARGIN)){
-		return 1;
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 
