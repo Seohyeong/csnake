@@ -268,9 +268,9 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
-		// if(detect_crash(state.snake)){
-		// 	pause = true;
-		// }
+		if(detect_crash(state.snake)){
+			pause = true;
+		}
 
 		if(!pause){
 			move_snake(state.snake, state.snake.dir);
